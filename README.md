@@ -37,7 +37,7 @@ ignoring the 404:
 
 ![Add](Screenshot.png?raw=true "Optional Title")
 
-Just click _Save_ no never be notified of this particular false positive again.
+Just click _Save_ to never be notified of this particular false positive again.
 
 ## Installation
 
