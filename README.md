@@ -43,7 +43,7 @@ Just click _Save_ no never be notified of this particular false positive again.
 
 Install this library via:
 
-    pip install django_404_middleware
+    pip install django-404-middleware
 
 Add it to the `INSTALLED_APPS` in your Django settings file:
 
@@ -72,6 +72,10 @@ MIDDLEWARE = [
 The same caveat as for Django's built-in 404 middleware applies:
 `BrokenLinkEmailsDbMiddleware` must appear before other middleware that
 intercepts 404 errors. Put it towards the top of your `MIDDLEWARE` setting.
+
+Finally, apply migrations to initialise the database:
+
+    python manage.py migrate
 
 ## Caveats
 
