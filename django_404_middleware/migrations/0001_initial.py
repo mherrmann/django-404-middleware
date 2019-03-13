@@ -17,7 +17,7 @@ class Migration(migrations.Migration):
             name='Ignorable404Url',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('pattern', models.TextField()),
+                ('pattern', models.TextField(help_text='URLs matching this pattern are ignored.')),
                 ('exact', models.BooleanField(default=True, verbose_name='The full URL must match')),
                 ('is_re', models.BooleanField(default=False, verbose_name='Is regular expression')),
                 ('case_sensitive', models.BooleanField(default=False, verbose_name='Is case sensitive')),
