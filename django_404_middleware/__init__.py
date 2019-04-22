@@ -60,7 +60,7 @@ def _get_email_message(request, path, referer):
 	result += '\n\nTo ignore this link, visit %s.' % \
 			  _get_admin_add_url(request, Ignorable404Url, pattern=path)
 	result += '\n\nTo ignore all links from this referer, visit %s.' % \
-			  _get_admin_add_url(request, Ignorable404Referer, pattern=path)
+			  _get_admin_add_url(request, Ignorable404Referer, pattern=referer)
 	return result
 
 def _get_admin_add_url(request, model, **defaults):
