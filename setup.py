@@ -10,7 +10,7 @@ description = "An alternative to Django's BrokenLinkEmailsMiddleware"
 url = 'https://github.com/mherrmann/django-404-middleware'
 setup(
     name='django-404-middleware',
-    version='0.0.4',
+    version='0.0.5',
     description=description,
     long_description=description + '\n\nHome page: ' + url,
     author='Michael Herrmann',

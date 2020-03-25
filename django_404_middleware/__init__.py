@@ -22,6 +22,10 @@ class BrokenLinkEmailsDbMiddleware(BrokenLinkEmailsMiddleware):
 			referer = force_text(
 				request.META.get('HTTP_REFERER', ''), errors='replace'
 			)
+			FailedUrl = _import_models()[0]
+			failed_url = FailedUrl.objects.get_or_create(path=path)[0]
+			failed_url.num_occurrences += 1
+			failed_url.save()
 			if not self.is_ignorable_request(request, path, domain, referer):
 				_notify_managers_of_broken_link(request, path, domain, referer)
 		return response
@@ -29,7 +33,12 @@ class BrokenLinkEmailsDbMiddleware(BrokenLinkEmailsMiddleware):
 	def is_ignorable_request(self, request, uri, domain, referer):
 		if super().is_ignorable_request(request, uri, domain, referer):
 			return True
-		Ignorable404Url, Ignorable404Referer = _import_models()
+		FailedUrl, Ignorable404Url, Ignorable404Referer = _import_models()
+		num_occurrences = FailedUrl.objects.get(path=request.get_full_path())\
+			.num_occurrences
+		allowed = getattr(settings, 'NUM_ALLOWED_404s_PER_PATH', 1)
+		if num_occurrences <= allowed:
+			return True
 		if any(i.matches(referer) for i in Ignorable404Referer.objects.all()):
 			return True
 		return any(i.matches(uri) for i in Ignorable404Url.objects.all())
@@ -56,7 +65,7 @@ def _get_email_message(request, path, referer):
 	result += 'User agent: %s\n' % user_agent
 	result += 'IP address: %s' % ip
 
-	Ignorable404Url, Ignorable404Referer = _import_models()
+	Ignorable404Url, Ignorable404Referer = _import_models()[1:]
 	result += '\n\nTo ignore this link, visit %s.' % \
 			  _get_admin_add_url(request, Ignorable404Url, pattern=path)
 	result += '\n\nTo ignore all links from this referer, visit %s.' % \
@@ -72,5 +81,5 @@ def _get_admin_add_url(request, model, **defaults):
 def _import_models():
 	# If we import the models at module level, we get exception
 	# AppRegistryNotReady when starting Django. So import them late, here:
-	from .models import Ignorable404Url, Ignorable404Referer
-	return Ignorable404Url, Ignorable404Referer
+	from .models import FailedUrl, Ignorable404Url, Ignorable404Referer
+	return FailedUrl, Ignorable404Url, Ignorable404Referer

@@ -1,5 +1,10 @@
-from django.db.models import Model, TextField, BooleanField
+from django.db.models import Model, TextField, BooleanField, PositiveIntegerField
 from django_404_middleware.match import match
+
+class FailedUrl(Model):
+
+	path = TextField(unique=True)
+	num_occurrences = PositiveIntegerField(default=0)
 
 class Ignorable404Url(Model):
 
